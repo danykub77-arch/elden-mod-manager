@@ -1,0 +1,40 @@
+# Dependencies
+node_modules/
+
+# Frontend builds
+dist/
+
+# Rust / Tauri builds
+target/
+src-tauri/target/
+
+# Environment / secrets
+.env
+.env.*
+*.key
+*.key.pub
+
+# IDE
+.idea/
+.vscode/
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Local/runtime data
+.runtime/
+
+# Development backups
+*.bak
+*.bak-*
+*.backup-*
+*.before-*
+*.save
+
+# Vendored er-save-lib test data
+src-tauri/vendor/er-save-lib/test/
