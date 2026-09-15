@@ -1,4 +1,6 @@
 import NexusUpdateButton from "./NexusUpdateButton";
+import { check } from "@tauri-apps/plugin-updater";
+import { relaunch } from "@tauri-apps/plugin-process";
 import {
   useEffect,
   useMemo,
@@ -727,6 +729,37 @@ function App() {
   useEffect(() => {
     void initializeDownloadStore();
     loadEverything();
+
+    void (async () => {
+      try {
+        const update = await check();
+
+        if (!update) {
+          return;
+        }
+
+        const installUpdate = window.confirm(
+          `Elden Mod Manager ${update.version} is available.
+
+Would you like to download and install it now?`,
+        );
+
+        if (!installUpdate) {
+          await update.close();
+          return;
+        }
+
+        setMessage(`Downloading Elden Mod Manager ${update.version}...`);
+
+        await update.downloadAndInstall();
+
+        setMessage(`Elden Mod Manager ${update.version} installed. Restarting...`);
+
+        await relaunch();
+      } catch (error) {
+        console.error("Automatic update check failed:", error);
+      }
+    })();
   }, []);
 
   useEffect(() => {
