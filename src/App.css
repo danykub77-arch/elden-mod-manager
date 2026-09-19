@@ -4505,3 +4505,22 @@ select option:checked {
   border-bottom: 0 !important;
   box-shadow: none !important;
 }
+
+
+/* Larger invisible reveal target for the auto-hidden titlebar. */
+.custom-titlebar::after {
+  display: block !important;
+  content: "" !important;
+  position: absolute !important;
+  left: 0 !important;
+  right: 0 !important;
+  top: 30px !important;
+  height: 14px !important;
+  background: transparent !important;
+  pointer-events: auto !important;
+}
+
+.custom-titlebar:hover,
+.custom-titlebar:focus-within {
+  transform: translateY(0) !important;
+}
