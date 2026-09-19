@@ -63,6 +63,7 @@ pub(crate) fn find_steam_root() -> Option<PathBuf> {
         ] {
             if let Ok(output) = Command::new("reg")
                 .args(["query", key, "/v", "SteamPath"])
+                .creation_flags(CREATE_NO_WINDOW)
                 .output()
             {
                 if output.status.success() {
