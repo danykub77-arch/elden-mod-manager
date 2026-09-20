@@ -665,6 +665,7 @@ pub fn launch_elden_ring_vanilla() -> Result<(), String> {
     #[cfg(target_os = "windows")]
     {
         Command::new("cmd")
+            .creation_flags(CREATE_NO_WINDOW)
             .args([
                 "/C",
                 "start",

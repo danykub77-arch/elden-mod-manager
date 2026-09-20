@@ -4,6 +4,12 @@ use crate::paths;
 use crate::runtime::{ModContentType, UnifiedProfile};
 
 use std::fs;
+
+#[cfg(target_os = "windows")]
+use std::os::windows::process::CommandExt;
+
+#[cfg(target_os = "windows")]
+const CREATE_NO_WINDOW: u32 = 0x08000000;
 use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
 
@@ -408,6 +414,7 @@ fn start_randomizer_launch_handoff(
             thread::sleep(Duration::from_millis(250));
 
             let running = Command::new("tasklist")
+                .creation_flags(CREATE_NO_WINDOW)
                 .args(["/FI", "IMAGENAME eq modengine2_launcher.exe", "/NH"])
                 .output();
 
@@ -436,10 +443,12 @@ fn start_randomizer_launch_handoff(
         println!("Randomizer Launch Elden Ring pressed; handing off to me3.");
 
         let _ = Command::new("taskkill")
+            .creation_flags(CREATE_NO_WINDOW)
             .args(["/IM", "EldenRingRandomizer.exe", "/F"])
             .status();
 
         let _ = Command::new("taskkill")
+            .creation_flags(CREATE_NO_WINDOW)
             .args(["/IM", "modengine2_launcher.exe", "/F"])
             .status();
 

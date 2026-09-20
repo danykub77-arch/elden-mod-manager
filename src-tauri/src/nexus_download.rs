@@ -4,6 +4,12 @@ use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
 use std::collections::{HashMap, HashSet};
+
+#[cfg(target_os = "windows")]
+use std::os::windows::process::CommandExt;
+
+#[cfg(target_os = "windows")]
+const CREATE_NO_WINDOW: u32 = 0x08000000;
 use std::fs;
 use std::fs::File;
 use std::io::Write;
@@ -1192,6 +1198,7 @@ fn open_browser(url: &str) -> Result<(), String> {
     #[cfg(target_os = "windows")]
     {
         Command::new("cmd")
+            .creation_flags(CREATE_NO_WINDOW)
             .args(["/C", "start", "", url])
             .spawn()
             .map_err(|error| format!("Could not open browser: {error}"))?;

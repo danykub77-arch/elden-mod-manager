@@ -1,6 +1,12 @@
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 use serde_json::{json, Value};
 use std::{fs, path::PathBuf, process::Command};
+
+#[cfg(target_os = "windows")]
+use std::os::windows::process::CommandExt;
+
+#[cfg(target_os = "windows")]
+const CREATE_NO_WINDOW: u32 = 0x08000000;
 use tauri::{AppHandle, Manager};
 
 const REST_API_BASE: &str = "https://api.nexusmods.com/v1";
@@ -917,6 +923,7 @@ pub fn open_nexus_mod(mod_id: u64) -> Result<(), String> {
     #[cfg(target_os = "windows")]
     {
         Command::new("cmd")
+            .creation_flags(CREATE_NO_WINDOW)
             .args(["/C", "start", "", &url])
             .spawn()
             .map_err(|error| format!("Could not open browser: {error}"))?;
