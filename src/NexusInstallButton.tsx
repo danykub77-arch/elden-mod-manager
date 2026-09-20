@@ -861,14 +861,19 @@ export default function NexusInstallButton({
                     "Waiting for Nexus authorization...",
                 );
 
-                await invoke(
-                    "open_nexus_download_authorization",
+                const archivePath =
+                await invoke<string>(
+                    "download_nexus_mod_file",
                     {
                         modId,
 
                         fileId:
                         file.file_id,
                     },
+                );
+
+                await processDownloadedArchive(
+                    archivePath,
                 );
             }
         } catch (reason) {
@@ -910,7 +915,6 @@ export default function NexusInstallButton({
         className="button primary browse-open-button"
         disabled={
             loadingFiles ||
-            activeFileId !== null ||
             checkingInstalled ||
             installedOnProfile
         }
