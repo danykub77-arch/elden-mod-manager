@@ -726,6 +726,11 @@ function App() {
     }
   }
 
+  const [availableUpdateVersion, setAvailableUpdateVersion] =
+    useState<string | null>(null);
+  const [installingUpdate, setInstallingUpdate] =
+    useState(false);
+
   useEffect(() => {
     void initializeDownloadStore();
     loadEverything();
@@ -738,29 +743,41 @@ function App() {
           return;
         }
 
-        const installUpdate = window.confirm(
-          `Elden Mod Manager ${update.version} is available.
-
-Would you like to download and install it now?`,
-        );
-
-        if (!installUpdate) {
-          await update.close();
-          return;
-        }
-
-        setMessage(`Downloading Elden Mod Manager ${update.version}...`);
-
-        await update.downloadAndInstall();
-
-        setMessage(`Elden Mod Manager ${update.version} installed. Restarting...`);
-
-        await relaunch();
+        setAvailableUpdateVersion(update.version);
+        await update.close();
       } catch (error) {
         console.error("Automatic update check failed:", error);
       }
     })();
   }, []);
+
+  async function installAvailableUpdate() {
+    if (installingUpdate) {
+      return;
+    }
+
+    setInstallingUpdate(true);
+
+    try {
+      const update = await check();
+
+      if (!update) {
+        setAvailableUpdateVersion(null);
+        setMessage("Elden Mod Manager is already up to date.");
+        return;
+      }
+
+      setMessage(`Downloading Elden Mod Manager ${update.version}...`);
+      await update.downloadAndInstall();
+
+      setMessage(`Elden Mod Manager ${update.version} installed. Restarting...`);
+      await relaunch();
+    } catch (error) {
+      console.error("Update installation failed:", error);
+      setMessage(`Failed to install update: ${String(error)}`);
+      setInstallingUpdate(false);
+    }
+  }
 
   useEffect(() => {
     try {
@@ -1516,6 +1533,38 @@ return (
         : ""
     }`}
   >
+  {availableUpdateVersion && (
+    <div className="app-update-overlay">
+      <div className="app-update-dialog">
+        <div className="app-update-title">
+          Update Available
+        </div>
+
+        <div className="app-update-text">
+          Elden Mod Manager {availableUpdateVersion} is available.
+        </div>
+
+        <div className="app-update-actions">
+          <button
+            className="app-update-later"
+            disabled={installingUpdate}
+            onClick={() => setAvailableUpdateVersion(null)}
+          >
+            Later
+          </button>
+
+          <button
+            className="app-update-now"
+            disabled={installingUpdate}
+            onClick={() => void installAvailableUpdate()}
+          >
+            {installingUpdate ? "Installing..." : "Update Now"}
+          </button>
+        </div>
+      </div>
+    </div>
+  )}
+
   <header
     className="custom-titlebar"
     onMouseDown={async (event) => {

@@ -4524,3 +4524,23 @@ select option:checked {
 .custom-titlebar:focus-within {
   transform: translateY(0) !important;
 }
+
+/* Application update prompt */
+
+.app-update-overlay { position: fixed; inset: 0; z-index: 100000; display: flex; align-items: center; justify-content: center; background: rgba(0, 0, 0, 0.62); backdrop-filter: blur(4px); }
+
+.app-update-dialog { width: min(420px, calc(100vw - 48px)); padding: 24px; border: 1px solid rgba(212, 175, 55, 0.28); border-radius: 12px; background: #171717; box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55); }
+
+.app-update-title { margin-bottom: 10px; font-size: 20px; font-weight: 700; color: #f1f1f1; }
+
+.app-update-text { margin-bottom: 22px; color: #bdbdbd; line-height: 1.5; }
+
+.app-update-actions { display: flex; justify-content: flex-end; gap: 10px; }
+
+.app-update-actions button { min-width: 100px; padding: 9px 15px; border-radius: 7px; cursor: pointer; }
+
+.app-update-actions button:disabled { cursor: default; opacity: 0.6; }
+
+.app-update-later { border: 1px solid #444; background: #242424; color: #ddd; }
+
+.app-update-now { border: 1px solid rgba(212, 175, 55, 0.55); background: #2d2819; color: #e6cc72; }
