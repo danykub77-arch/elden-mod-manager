@@ -728,6 +728,8 @@ function App() {
 
   const [availableUpdateVersion, setAvailableUpdateVersion] =
     useState<string | null>(null);
+  const [showUpdatePrompt, setShowUpdatePrompt] =
+    useState(false);
   const [installingUpdate, setInstallingUpdate] =
     useState(false);
 
@@ -744,6 +746,7 @@ function App() {
         }
 
         setAvailableUpdateVersion(update.version);
+        setShowUpdatePrompt(true);
         await update.close();
       } catch (error) {
         console.error("Automatic update check failed:", error);
@@ -1533,7 +1536,7 @@ return (
         : ""
     }`}
   >
-  {availableUpdateVersion && (
+  {availableUpdateVersion && showUpdatePrompt && (
     <div className="app-update-overlay">
       <div className="app-update-dialog">
         <div className="app-update-title">
@@ -1548,7 +1551,7 @@ return (
           <button
             className="app-update-later"
             disabled={installingUpdate}
-            onClick={() => setAvailableUpdateVersion(null)}
+            onClick={() => setShowUpdatePrompt(false)}
           >
             Later
           </button>
@@ -1852,6 +1855,15 @@ return (
       }
       redetectingGame={
         redetectingGame
+      }
+      availableUpdateVersion={
+        availableUpdateVersion
+      }
+      installingUpdate={
+        installingUpdate
+      }
+      onInstallUpdate={() =>
+        void installAvailableUpdate()
       }
       />
     ) : page ===
@@ -2369,6 +2381,9 @@ function Dashboard({
   onOpenMods,
   onRedetectGame,
   redetectingGame,
+  availableUpdateVersion,
+  installingUpdate,
+  onInstallUpdate,
 }: {
   installation: EldenRingInstallation | null;
   platform: PlatformInfo | null;
@@ -2388,6 +2403,9 @@ function Dashboard({
   onOpenMods: () => void;
   onRedetectGame: () => void;
   redetectingGame: boolean;
+  availableUpdateVersion: string | null;
+  installingUpdate: boolean;
+  onInstallUpdate: () => void;
 }) {
   return (
     <>
@@ -2421,6 +2439,32 @@ function Dashboard({
         )}
         </div>
         </header>
+
+        {availableUpdateVersion && (
+          <section className="dashboard-update-card">
+            <div className="dashboard-update-info">
+              <div className="eyebrow">
+                UPDATE AVAILABLE
+              </div>
+
+              <strong>
+                Elden Mod Manager {availableUpdateVersion}
+              </strong>
+
+              <span>
+                A newer version is ready to install.
+              </span>
+            </div>
+
+            <button
+              className="dashboard-update-button"
+              disabled={installingUpdate}
+              onClick={onInstallUpdate}
+            >
+              {installingUpdate ? "Installing..." : "Update Now"}
+            </button>
+          </section>
+        )}
 
         <section className="hero-card">
         <div className="hero-content">

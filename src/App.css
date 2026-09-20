@@ -4544,3 +4544,19 @@ select option:checked {
 .app-update-later { border: 1px solid #444; background: #242424; color: #ddd; }
 
 .app-update-now { border: 1px solid rgba(212, 175, 55, 0.55); background: #2d2819; color: #e6cc72; }
+
+/* Dashboard update notice */
+
+.dashboard-update-card { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-bottom: 18px; padding: 16px 18px; border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 10px; background: rgba(212, 175, 55, 0.06); }
+
+.dashboard-update-info { display: flex; flex-direction: column; gap: 4px; }
+
+.dashboard-update-info strong { font-size: 15px; color: #f1f1f1; }
+
+.dashboard-update-info span { font-size: 13px; color: #999; }
+
+.dashboard-update-button { flex: 0 0 auto; padding: 9px 16px; border: 1px solid rgba(212, 175, 55, 0.55); border-radius: 7px; background: #2d2819; color: #e6cc72; font-weight: 600; cursor: pointer; }
+
+.dashboard-update-button:hover:not(:disabled) { background: #39311d; }
+
+.dashboard-update-button:disabled { cursor: default; opacity: 0.6; }
