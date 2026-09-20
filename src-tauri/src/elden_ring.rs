@@ -497,6 +497,7 @@ pub(crate) fn launch_with_elden_ring_proton(executable: &Path) -> Result<(), Str
         .ok_or_else(|| format!("Invalid executable path: {}", executable.display()))?;
 
     Command::new(executable)
+        .creation_flags(CREATE_NO_WINDOW)
         .current_dir(working_directory)
         .spawn()
         .map_err(|error| format!("Failed to launch {}: {error}", executable.display()))?;

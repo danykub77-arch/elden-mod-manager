@@ -9,6 +9,12 @@ use std::io::Cursor;
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
+#[cfg(target_os = "windows")]
+use std::os::windows::process::CommandExt;
+
+#[cfg(target_os = "windows")]
+const CREATE_NO_WINDOW: u32 = 0x08000000;
+
 const GITHUB_LATEST_RELEASE_API: &str =
     "https://api.github.com/repos/garyttierney/me3/releases/latest";
 
@@ -101,7 +107,12 @@ fn installed_version() -> Result<Option<String>, String> {
         return Ok(None);
     };
 
-    let output = Command::new(&executable)
+    let mut command = Command::new(&executable);
+
+    #[cfg(target_os = "windows")]
+    command.creation_flags(CREATE_NO_WINDOW);
+
+    let output = command
         .arg("--version")
         .output()
         .map_err(|e| {

@@ -256,6 +256,7 @@ fn launch_me3(executable: &Path, profile: &Path) -> Result<(), String> {
     let engine = me3::engine_directory()?;
 
     Command::new(executable)
+        .creation_flags(CREATE_NO_WINDOW)
         .arg("launch")
         .arg("-p")
         .arg(profile)
