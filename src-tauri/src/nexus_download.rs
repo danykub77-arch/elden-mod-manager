@@ -1178,33 +1178,12 @@ pub async fn check_nexus_mod_updates(
     Ok(result)
 }
 
-fn open_browser(url: &str) -> Result<(), String> {
-    #[cfg(target_os = "linux")]
-    {
-        Command::new("xdg-open")
-            .arg(url)
-            .spawn()
-            .map_err(|error| format!("Could not open browser: {error}"))?;
-    }
+fn open_browser(app: &AppHandle, url: &str) -> Result<(), String> {
+    use tauri_plugin_opener::OpenerExt;
 
-    #[cfg(target_os = "macos")]
-    {
-        Command::new("open")
-            .arg(url)
-            .spawn()
-            .map_err(|error| format!("Could not open browser: {error}"))?;
-    }
-
-    #[cfg(target_os = "windows")]
-    {
-        Command::new("cmd")
-            .creation_flags(CREATE_NO_WINDOW)
-            .args(["/C", "start", "", url])
-            .spawn()
-            .map_err(|error| format!("Could not open browser: {error}"))?;
-    }
-
-    Ok(())
+    app.opener()
+        .open_url(url, None::<&str>)
+        .map_err(|error| format!("Could not open browser: {error}"))
 }
 
 #[tauri::command]
@@ -1227,10 +1206,10 @@ pub async fn open_nexus_download_authorization(
     fetch_file_details(&client, &config.api_key, mod_id, file_id).await?;
 
     let url = format!(
-        "https://www.nexusmods.com/{GAME_DOMAIN}/mods/{mod_id}?tab=files&file_id={file_id}&nmm=1"
+        "https://www.nexusmods.com/{GAME_DOMAIN}/mods/{mod_id}?tab=files&file_id={file_id}"
     );
 
-    open_browser(&url)
+    open_browser(&app, &url)
 }
 
 fn unix_time() -> Result<u64, String> {
