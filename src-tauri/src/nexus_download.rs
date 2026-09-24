@@ -1227,7 +1227,7 @@ pub async fn open_nexus_download_authorization(
     fetch_file_details(&client, &config.api_key, mod_id, file_id).await?;
 
     let url = format!(
-        "https://www.nexusmods.com/{GAME_DOMAIN}/mods/{mod_id}?tab=files&file_id={file_id}"
+        "https://www.nexusmods.com/{GAME_DOMAIN}/mods/{mod_id}?tab=files&file_id={file_id}&nmm=1"
     );
 
     open_browser(&url)
